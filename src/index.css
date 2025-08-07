@@ -1,6 +1,7 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@tailwind utilities;
 
-
-body {
-  @apply bg-white dark:bg-gray-900 text-black dark:text-white;
+html, body {
+    @apply bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300;
 }
+

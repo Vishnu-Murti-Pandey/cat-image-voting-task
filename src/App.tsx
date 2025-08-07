@@ -6,11 +6,14 @@ import Header from './components/Header'
 import { useSubId } from './hooks/useSubId'
 import Spinner from './components/Spinner'
 import toast from 'react-hot-toast'
+import { useTheme } from './context/ThemeContext'
 
 function App() {
   const subId = useSubId()
   const { cats, setCats } = useCatStore()
   const [loading, setLoading] = useState(false)
+
+  const { theme } = useTheme()
 
   const fetchCats = async () => {
     try {
@@ -34,7 +37,15 @@ function App() {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        <div
+          className={`grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4
+          ${
+            theme === 'dark'
+              ? 'bg-black text-white border-white hover:bg-gray-900'
+              : 'bg-white text-black border-black hover:bg-gray-200'
+          }
+        `}
+        >
           {cats.map((cat) => (
             <CatCard key={cat.id} {...cat} subId={subId} />
           ))}

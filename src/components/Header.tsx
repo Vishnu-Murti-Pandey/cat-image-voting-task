@@ -1,23 +1,8 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 export default function Header({ onRefresh }: { onRefresh: () => void }) {
-  const [isDark, setIsDark] = useState(false)
-
-  useEffect(() => {
-    const theme = localStorage.getItem('theme')
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
-      setIsDark(true)
-    }
-  }, [])
-
-  const toggleTheme = () => {
-    const newTheme = !isDark
-    setIsDark(newTheme)
-    document.documentElement.classList.toggle('dark', newTheme)
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light')
-  }
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="flex justify-between items-center p-4 bg-gray-100 dark:bg-gray-800">
@@ -28,15 +13,14 @@ export default function Header({ onRefresh }: { onRefresh: () => void }) {
         </Link>
         <button
           onClick={toggleTheme}
-          className={`px-3 py-1 border rounded 
+          className={`px-3 py-1 border rounded cursor-pointer 
             ${
-              isDark
-                ? 'bg-[#000] hover:bg-[#1b1a1a] text-[#FFF] border-white'
-                : 'bg-[#FFF] hover:bg-[#cbcbcb] text-[#000] border-black'
-            } 
-               cursor-pointer`}
+              theme === 'dark'
+                ? 'bg-black text-white border-white hover:bg-gray-900'
+                : 'bg-white text-black border-black hover:bg-gray-200'
+            }`}
         >
-          {isDark ? '☀️ Light' : '🌙 Dark'}
+          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
         </button>
         <button
           onClick={onRefresh}
