@@ -3,7 +3,7 @@
     "jsx": "react-jsx", 
     "module": "esnext",
     "target": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "allowJs": true,
     "strict": true,
