@@ -1,34 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { getCats } from './api/catApi'
+import CatCard from './components/CatCard'
+import { useCatStore } from './store/catStore'
+import Header from './components/Header'
+import { useSubId } from './hooks/useSubId'
+import Spinner from './components/Spinner'
+import toast from 'react-hot-toast'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const subId = useSubId()
+  const { cats, setCats } = useCatStore()
+  const [loading, setLoading] = useState(false)
+
+  const fetchCats = async () => {
+    try {
+      setLoading(true)
+      const res = await getCats()
+      setCats(res.data)
+    } catch (err) {
+      toast.error('Failed to fetch cats!')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchCats()
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
+      <Header onRefresh={fetchCats} />
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          {cats.map((cat) => (
+            <CatCard key={cat.id} {...cat} subId={subId} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
