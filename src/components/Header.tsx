@@ -12,6 +12,7 @@ export default function Header({ onRefresh }: { onRefresh: () => void }) {
           My Votes
         </Link>
         <button
+          aria-label="Toggle Theme"
           onClick={toggleTheme}
           className={`px-3 py-1 border rounded cursor-pointer 
             ${
